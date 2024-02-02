@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/todo.css}">
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card ">
+                <div class="card-body custom-border">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <h4 class="card-title custom-title">Tasks List</h4>
+                            <div class="custom-button">
+                                <a th:href="@{todo/add}" class="btn btn-primary add-tag" role="button">+ Add Task</a>
+                                <form th:action="@{todo/delete/all}" method="post">
+                                    <button class="btn btn-primary delete-button">Delete All</button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="container border border-secondary rounded  ">
+                        <div class="table-responsive">
+                            <table class="table table-striped custom-table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        ID
+                                    </th>
+                                    <th>
+                                        Task Name
+                                    </th>
+                                    <th>
+                                        Start Time
+                                    </th>
+                                    <th>
+                                        End Time
+                                    </th>
+                                    <th>
+                                        Remarks
+                                    </th>
+                                    <th>
+                                        Edit
+                                    </th>
+                                    <th>
+                                        Delete
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                <tr  th:if="${tasks.empty}">
+                                    <td > No Data Available </td>
+                                </tr>
+                                <tr th:each="task : ${tasks}">
+                                    <td><span th:text="${task.id}"> ID </span></td>
+                                    <td><span th:text="${task.taskName}"> Task Name </span></td>
+                                    <td><span th:text="${task.startingTime}">Start Time</span></td>
+                                    <td><span th:text="${task.endTime}">End Time</span></td>
+                                    <td><span th:text="${task.remarks}"> Remarks </span></td>
+                                    <td><a th:href="@{'/todo/edit/' + ${task.id}}" class="btn btn-primary" role="button">Edit</a></td>
+                                    <td>
+                                        <form th:action="@{'/todo/delete/' + ${task.id}}" method="post">
+
+                                            <button class="btn btn-primary" type="submit">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="paging" th:if="${totalPages > 1}">
+                                <div class="row col-sm-12">
+                                    <div class="col-sm-2">
+                                        Total Tasks: [[${totalElements}]]
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <span  th:each="i: ${#numbers.sequence(1, totalPages)}">
+                                            <a th:if="${currentPage != i}" th:href="@{'/todo/page/' + ${i}}">[[${i}]]</a>
+                                            <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <span th:if="${currentPage < 2}" >Previous</span>
+                                        <a th:unless="${currentPage < 2}" th:href="@{'/todo/page/' + ${currentPage - 1}}">Previous</a>
+                                    </div>
+
+                                    <div class="col-sm-1">
+                                        <a th:if="${currentPage < totalPages}" th:href="@{'/todo/page/' + ${currentPage + 1}}">Next</a>
+                                        <span th:unless="${currentPage < totalPages}">Next</span>
+                                    </div>
+
+                                    <div class="col-sm-1">
+                                        <a th:if="${currentPage < totalPages}" th:href="@{'/todo/page/' + ${totalPages}}">Last</a>
+                                        <span th:unless="${currentPage < totalPages}">Last</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
